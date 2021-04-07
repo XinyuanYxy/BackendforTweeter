@@ -8,10 +8,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  const sql = "INSERT INTO user (email, password, fname, lname, picture_id) VALUES ?";
+  const sql = "INSERT INTO user (email, password, username, fname, lname, picture_id) VALUES ?";
   const values = [[
-    req.body.username,
+    req.body.email,
     req.body.password,
+    req.body.username,
     req.body.firstName,
     req.body.lastName,
     0

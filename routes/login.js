@@ -8,7 +8,7 @@ const jwtSecret = 'secretsecretsecret123';
 // Determines how long until the auth token should expire
 const expiresIn = 60;
 
-/* GET users listing. */
+/* POST login */
 router.post('/', function(req, res, next) {
   console.log(req.body);
   const sql = "SELECT * FROM user WHERE email = ?"
@@ -20,7 +20,7 @@ router.post('/', function(req, res, next) {
     } else {
       if (result[0].password === req.body.password) {
         res.status(200).send({
-          token: jwt.sign({ user: req.body.username }, jwtSecret, { expiresIn })
+          token: jwt.sign({ user: result[0].user_id }, jwtSecret, { expiresIn })
         });
       } else {
         console.log("incorrect password");

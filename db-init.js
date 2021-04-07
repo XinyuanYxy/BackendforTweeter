@@ -16,18 +16,46 @@ connection.connect(function(err) {
         console.log("Database created!");
     });
     connection.query("USE tweeter");
-    const sql = `CREATE TABLE IF NOT EXISTS user (
+    let sql = `CREATE TABLE IF NOT EXISTS user (
         user_id BIGINT AUTO_INCREMENT PRIMARY KEY, 
         email VARCHAR(256) NOT NULL UNIQUE, 
         password VARCHAR(256) NOT NULL, 
+        username VARCHAR(20) NOT NULL UNIQUE,
         fname VARCHAR(256) NOT NULL, 
         lname VARCHAR(256) NOT NULL, 
         picture_id BIGINT NOT NULL, 
         birthday DATE, 
-        description TEXT)`;
+        description TEXT
+    )`;
     connection.query(sql, function (err, result) {
         if (err) throw err;
         console.log("Created user table!");
+    });
+    
+    sql = `CREATE TABLE IF NOT EXISTS post (
+        post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        user_id BIGINT NOT NULL,
+        date DATE NOT NULL,
+        content TEXT,
+        picture_id BIGINT, 
+        FOREIGN KEY (user_id) REFERENCES user(user_id),
+        CONSTRAINT chk_post CHECK (content IS NOT NULL OR picture_id IS NOT NULL)
+    )`;
+    connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("Created post table!");
+    });
+
+    sql = `CREATE TABLE IF NOT EXISTS following (
+        user_id BIGINT NOT NULL,
+        following_id BIGINT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES user(user_id),
+        FOREIGN KEY (following_id) REFERENCES user(user_id),
+        PRIMARY KEY(user_id, following_id)
+    )`;
+    connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("Created following table!");
     });
 
     connection.end();
