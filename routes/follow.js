@@ -29,7 +29,7 @@ router.post('/', function(req, res, next) {
   });
 });
 
-router.delete('/', function(req, res, next) {
+router.delete('/:id', function(req, res, next) {
     let user;
     try {
       user = jwt.decode(req.headers.authorization.split(" ")[1]).user;
@@ -38,11 +38,16 @@ router.delete('/', function(req, res, next) {
       res.status(401).send("UNAUTHORIZED");
     }
     let sql = "DELETE FROM following WHERE user_id = ? AND following_id = ?";
-    db.query(sql, [user, req.body.follow], function(err, result) {
+    db.query(sql, [user, req.params.id], function(err, result) { 
       if (err) {
           console.error(err);
           res.status(400).send("Bad Request");
       } else {
+        if (result.affectedRows === 0) {
+          console.log("No following entry to delete");
+        } else {
+          console.log("Following entry deleted");
+        }
         res.status(200).send("SUCCESS");
       }
     });
