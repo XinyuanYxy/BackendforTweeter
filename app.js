@@ -10,6 +10,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var postRouter = require('./routes/post');
+var replyRouter = require('./routes/reply');
 var followRouter = require('./routes/follow');
 
 var app = express();
@@ -30,6 +31,7 @@ app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use('/post', postRouter);
 app.use('/follow', followRouter);
+app.use('/reply', replyRouter);
 
 app.use(function(req,res,next) {
   res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');

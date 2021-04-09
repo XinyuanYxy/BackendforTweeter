@@ -58,5 +58,21 @@ connection.connect(function(err) {
         console.log("Created following table!");
     });
 
+    sql = `CREATE TABLE IF NOT EXISTS reply (
+        reply_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        user_id BIGINT NOT NULL,
+        post_id BIGINT NOT NULL,
+        date DATE NOT NULL,
+        content TEXT,
+        picture_id BIGINT, 
+        FOREIGN KEY (user_id) REFERENCES user(user_id),
+        FOREIGN KEY (post_id) REFERENCES post(post_id),
+        CONSTRAINT chk_reply CHECK (content IS NOT NULL OR picture_id IS NOT NULL)
+    )`;
+    connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("Created replytable!");
+    });
+
     connection.end();
 });
