@@ -54,4 +54,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
 });
 
+const dir = path.join(__dirname, "/public");
+app.use(express.static(dir));
+
 module.exports = app;
