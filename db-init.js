@@ -16,9 +16,20 @@ connection.connect(function(err) {
         if (err) throw err;
         console.log("Database created!");
     });
-
     connection.query("USE tweeter");
-    let sql = `CREATE TABLE IF NOT EXISTS user (
+
+    let sql;
+
+    sql = `CREATE TABLE IF NOT EXISTS images (
+        image_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        image_path TEXT NOT NULL
+    )`;
+    connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("Created images table!");
+    });
+
+    sql = `CREATE TABLE IF NOT EXISTS user (
         user_id BIGINT AUTO_INCREMENT PRIMARY KEY, 
         email VARCHAR(256) NOT NULL UNIQUE, 
         password VARCHAR(256) NOT NULL, 
@@ -33,15 +44,6 @@ connection.connect(function(err) {
     connection.query(sql, function (err, result) {
         if (err) throw err;
         console.log("Created user table!");
-    });
-    
-    sql = `CREATE TABLE IF NOT EXISTS images (
-        image_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-        image_path TEXT NOT NULL
-    )`;
-    connection.query(sql, function (err, result) {
-        if (err) throw err;
-        console.log("Created images table!");
     });
 
     sql = `CREATE TABLE IF NOT EXISTS post (
