@@ -80,17 +80,4 @@ router.post("/profile", upload.single("file"), function(req, res, next) {
   });
 });
 
-// TODO: doesn't really work
-router.get("/single/:id", function(req, res, next) {
-  let sql = `SELECT image_path FROM images WHERE image_id = ?`
-  db.query(sql, [req.params.id], function(err, result) {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Something went wrong");
-    } else {
-      res.status(200).sendFile(`/public/images/${result}.png`)
-    }
-  });
-});
-
 module.exports = router;
