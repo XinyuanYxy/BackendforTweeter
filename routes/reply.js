@@ -14,8 +14,9 @@ router.get('/post/:postId', function(req, res, next) {
   console.log(`post_id = ${post_id}`);
 
   let sql = `
-    SELECT reply.*, poster.username, poster.fname, poster.picture_id AS profile_picture_id
+    SELECT reply.*, images.image_path, poster.username, poster.fname, poster.picture_id AS profile_picture_id
     FROM user AS poster INNER JOIN reply on poster.user_id = reply.user_id
+    INNER JOIN images ON poster.picture_id = images.image_id
     WHERE reply.post_id = ?
     ORDER BY reply.date ASC, reply.reply_id
   `;
@@ -38,9 +39,10 @@ router.post('/', function(req, res, next) {
     console.log("Unauthorized user")
     res.status(401).send("UNAUTHORIZED");
   }
-  let sql = "INSERT INTO post (user_id, date, content, picture_id) VALUES ?";
+  let sql = "INSERT INTO reply (user_id, post_id, date, content, picture_id) VALUES ?";
   const values = [[
     user,
+    req.body.post_id,
     new Date(req.body.date),
     req.body.content || null,
     req.body.picture_id || null,
