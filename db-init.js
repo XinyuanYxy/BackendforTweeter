@@ -11,10 +11,12 @@ connection.connect(function(err) {
       return;
     }
    
+    
     connection.query("CREATE DATABASE IF NOT EXISTS tweeter", function (err, result) {
         if (err) throw err;
         console.log("Database created!");
     });
+
     connection.query("USE tweeter");
     let sql = `CREATE TABLE IF NOT EXISTS user (
         user_id BIGINT AUTO_INCREMENT PRIMARY KEY, 
@@ -23,21 +25,32 @@ connection.connect(function(err) {
         username VARCHAR(20) NOT NULL UNIQUE,
         fname VARCHAR(256) NOT NULL, 
         lname VARCHAR(256) NOT NULL, 
-        picture_id BIGINT NOT NULL, 
+        picture_id BIGINT DEFAULT 1,
         birthday DATE, 
-        description TEXT
+        description TEXT,
+        FOREIGN KEY (picture_id) REFERENCES images(image_id)
     )`;
     connection.query(sql, function (err, result) {
         if (err) throw err;
         console.log("Created user table!");
     });
     
+    sql = `CREATE TABLE IF NOT EXISTS images (
+        image_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        image_path TEXT NOT NULL
+    )`;
+    connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("Created images table!");
+    });
+
     sql = `CREATE TABLE IF NOT EXISTS post (
         post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
         user_id BIGINT NOT NULL,
         date DATE NOT NULL,
         content TEXT,
-        picture_id BIGINT, 
+        picture_id BIGINT,
+        FOREIGN KEY (picture_id) REFERENCES images(image_id),
         FOREIGN KEY (user_id) REFERENCES user(user_id),
         CONSTRAINT chk_post CHECK (content IS NOT NULL OR picture_id IS NOT NULL)
     )`;
@@ -64,15 +77,17 @@ connection.connect(function(err) {
         post_id BIGINT NOT NULL,
         date DATE NOT NULL,
         content TEXT,
-        picture_id BIGINT, 
+        picture_id BIGINT,
+        FOREIGN KEY(picture_id) REFERENCES images(image_id), 
         FOREIGN KEY (user_id) REFERENCES user(user_id),
         FOREIGN KEY (post_id) REFERENCES post(post_id),
         CONSTRAINT chk_reply CHECK (content IS NOT NULL OR picture_id IS NOT NULL)
     )`;
     connection.query(sql, function (err, result) {
         if (err) throw err;
-        console.log("Created replytable!");
+        console.log("Created reply table!");
     });
 
+    
     connection.end();
 });

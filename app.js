@@ -12,7 +12,7 @@ var loginRouter = require('./routes/login');
 var postRouter = require('./routes/post');
 var replyRouter = require('./routes/reply');
 var followRouter = require('./routes/follow');
-
+var imagesRouter = require('./routes/images');
 var app = express();
 
 // Test secret; realistically should be more secure and not stored here
@@ -32,6 +32,7 @@ app.use('/login', loginRouter);
 app.use('/post', postRouter);
 app.use('/follow', followRouter);
 app.use('/reply', replyRouter);
+app.use('/images', imagesRouter);
 
 app.use(function(req,res,next) {
   res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
