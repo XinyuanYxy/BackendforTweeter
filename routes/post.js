@@ -40,6 +40,7 @@ router.get('/user/:userId', function(req, res, next) {
     try {
       user = jwt.decode(req.headers.authorization.split(" ")[1]).user;
       console.log(`user = ${user}`);
+      console.log("THIS IS WORKING");
     } catch (e) {
       console.log("Unauthorized user")
       res.status(401).send("UNAUTHORIZED");
