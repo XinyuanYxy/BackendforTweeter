@@ -16,12 +16,14 @@ router.get('/', function(req, res, next) {
     console.log("Unauthorized user")
     res.status(401).send("UNAUTHORIZED");
   }
+
   let sql = `
-    SELECT post.*, poster.username, poster.fname, poster.picture_id AS profile_picture_id
+    SELECT post.*, images.image_path, poster.username, poster.fname
     FROM user AS poster INNER JOIN post on poster.user_id = post.user_id
     INNER JOIN following ON post.user_id = following.following_id
+    INNER JOIN images ON poster.picture_id = images.image_id
     WHERE following.user_id = ?
-    ORDER BY post.date
+    ORDER BY post.date DESC, post.post_id DESC
   `;
   db.query(sql, [user], function(err, result) {
     if (err) {
@@ -40,6 +42,7 @@ router.get('/user/:userId', function(req, res, next) {
     try {
       user = jwt.decode(req.headers.authorization.split(" ")[1]).user;
       console.log(`user = ${user}`);
+      console.log("THIS IS WORKING");
     } catch (e) {
       console.log("Unauthorized user")
       res.status(401).send("UNAUTHORIZED");
@@ -48,10 +51,11 @@ router.get('/user/:userId', function(req, res, next) {
     user = req.params.userId;
   }
   let sql = `
-    SELECT post.*, poster.username, poster.fname, poster.picture_id AS profile_picture_id
+    SELECT post.*, images.image_path, poster.username, poster.fname, poster.picture_id AS profile_picture_id
     FROM user AS poster INNER JOIN post on poster.user_id = post.user_id
+    INNER JOIN images ON poster.picture_id = images.image_id
     WHERE post.user_id = ?
-    ORDER BY post.date
+    ORDER BY post.date DESC, post.post_id DESC
   `;
   db.query(sql, [user], function(err, result) {
     if (err) {
