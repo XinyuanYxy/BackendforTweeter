@@ -14,9 +14,10 @@ router.get('/post/:postId', function(req, res, next) {
   console.log(`post_id = ${post_id}`);
 
   let sql = `
-    SELECT reply.*, images.image_path, poster.username, poster.fname, poster.picture_id AS profile_picture_id
+    SELECT reply.*, reply_image.image_path AS reply_image_path, poster.username, poster.fname, avatar_image.image_path AS avatar_image_path
     FROM user AS poster INNER JOIN reply on poster.user_id = reply.user_id
-    INNER JOIN images ON poster.picture_id = images.image_id
+    LEFT OUTER JOIN images AS avatar_image ON poster.picture_id = avatar_image.image_id
+    LEFT OUTER JOIN images AS reply_image ON reply.picture_id = reply_image.image_id
     WHERE reply.post_id = ?
     ORDER BY reply.date ASC, reply.reply_id
   `;

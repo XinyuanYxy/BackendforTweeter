@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
 });
 
 
-//* GET all posts for a specific user */
+//* GET user given an id */
 router.get('/user/:userId', function(req, res, next) {
   let user;
   if (req.params.userId === "me") {
@@ -33,6 +33,32 @@ router.get('/user/:userId', function(req, res, next) {
     WHERE user.user_id = ?
   `;
   db.query(sql, [user], function(err, result) {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Something went wrong");
+    } else {
+      res.status(200).send(result);
+    }
+  });
+});
+
+//* GET all users given a search term */
+router.get('/search/:searchTerm', function(req, res, next) {
+  
+  let term = req.params.searchTerm;
+  if(term == "" || term == null){
+    res.status(500).send("Term empty");
+  }
+  console.log('Term: ' + term);
+
+  let sql = `
+    SELECT user.*, images.image_path AS avatar_image_path
+    FROM user
+    LEFT OUTER JOIN images ON user.picture_id = images.image_id
+    WHERE user.username LIKE ?
+  `;
+
+  db.query(sql, ['%'+term+'%'], function(err, result) {
     if (err) {
       console.error(err);
       res.status(500).send("Something went wrong");
