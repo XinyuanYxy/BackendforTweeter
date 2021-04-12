@@ -29,7 +29,7 @@ router.get('/user/:userId', function(req, res, next) {
   let sql = `
     SELECT *
     FROM user
-    INNER JOIN images ON user.picture_id = images.image_id
+    LEFT OUTER JOIN images ON user.picture_id = images.image_id
     WHERE user.user_id = ?
   `;
   db.query(sql, [user], function(err, result) {

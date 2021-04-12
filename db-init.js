@@ -36,7 +36,7 @@ connection.connect(function(err) {
         username VARCHAR(20) NOT NULL UNIQUE,
         fname VARCHAR(256) NOT NULL, 
         lname VARCHAR(256) NOT NULL, 
-        picture_id BIGINT DEFAULT 1,
+        picture_id BIGINT,
         birthday DATE, 
         description TEXT,
         FOREIGN KEY (picture_id) REFERENCES images(image_id)
